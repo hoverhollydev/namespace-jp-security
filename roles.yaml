@@ -1,12 +1,101 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: viewer-all-namespaces
+  name: viewer-cluster
 rules:
+  # Namespaces (cluster-wide)
   - apiGroups: [""]
-    resources: ["namespaces"]
+    resources: ["namespaces", "namespaces/status"]
     verbs: ["get", "list", "watch"]
 
-  - apiGroups: ["", "apps", "batch", "autoscaling", "networking.k8s.io"]
-    resources: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: viewer
+  namespace: jp
+rules:
+  # Pods
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "pods/status"]
     verbs: ["get", "list", "watch"]
+
+  # Deployments
+  - apiGroups: ["apps"]
+    resources: ["deployments", "deployments/status"]
+    verbs: ["get", "list", "watch"]
+
+  # StatefulSets
+  - apiGroups: ["apps"]
+    resources: ["statefulsets", "statefulsets/status"]
+    verbs: ["get", "list", "watch"]
+
+  # DaemonSets
+  - apiGroups: ["apps"]
+    resources: ["daemonsets", "daemonsets/status"]
+    verbs: ["get", "list", "watch"]
+
+  # ReplicaSets
+  - apiGroups: ["apps"]
+    resources: ["replicasets", "replicasets/status"]
+    verbs: ["get", "list", "watch"]
+
+  # Services
+  - apiGroups: [""]
+    resources: ["services", "services/status"]
+    verbs: ["get", "list", "watch"]
+
+  # ConfigMaps
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+
+  # Secrets (solo lectura)
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list"]
+
+  # PersistentVolumeClaims
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims", "persistentvolumeclaims/status"]
+    verbs: ["get", "list", "watch"]
+
+  # Ingresses
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["get", "list", "watch"]
+
+  # NetworkPolicies
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["networkpolicies"]
+    verbs: ["get", "list", "watch"]
+
+  # Jobs
+  - apiGroups: ["batch"]
+    resources: ["jobs", "jobs/status"]
+    verbs: ["get", "list", "watch"]
+
+  # CronJobs
+  - apiGroups: ["batch"]
+    resources: ["cronjobs", "cronjobs/status"]
+    verbs: ["get", "list", "watch"]
+
+  # HorizontalPodAutoscalers
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers", "horizontalpodautoscalers/status"]
+    verbs: ["get", "list", "watch"]
+
+  # Events
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch"]
+
+  # Resource Quotas
+  - apiGroups: [""]
+    resources: ["resourcequotas", "resourcequotas/status"]
+    verbs: ["get", "list", "watch"]
+
+  # Namespace (info del namespace)
+  - apiGroups: [""]
+    resources: ["namespaces", "namespaces/status"]
+    verbs: ["get", "list"]
